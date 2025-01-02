@@ -13,4 +13,18 @@ app.use(helmet.hsts({maxAge:ninetyDaysInSeconds,
     force: true}));
 app.use(helmet.dnsPrefetchControl());
 app.use(helmet.noCache());
-app.use(helmet.contentSecurityPolicy({ directives:{defaultSrc:["'self'"], scriptSrc:["'self'",'https://trusted-cdn.com']}}));
+app.use(helmet.contentSecurityPolicy({ directives:{defaultSrc:["'self'"], scriptSrc:["'self'",'trusted-cdn.com']}}));
+
+// Configure helmet() with custom options
+app.use(helmet({
+    frameguard: { // Configure frameguard
+      action: 'deny', // Deny iframe embedding
+    },
+    contentSecurityPolicy: { // Enable and configure CSP
+      directives: {
+        defaultSrc: ["'self'"], // Allow resources only from the same origin
+        styleSrc: ['style.com'], // Allow styles from specific domain
+      }
+    },
+    dnsPrefetchControl: false, // Disable DNS prefetch control
+  }));
